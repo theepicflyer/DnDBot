@@ -14,10 +14,9 @@ class Monster(object):
         
     
 def monsterStats(bot, update):
-    findMonsterIndex(update.message.text[14:])
-    
-    print (monster)
-    print (monster.health)
+    i = findMonsterIndex(update.message.text[14:])
+    print(monsterList[i].name)
+    bot.sendMessage(chat_id=update.message.chat_id, text=monsterList[i].name + " has " + str(monsterList[i].health) + " health")
 
 def findMonsterIndex(name):
     for i in range(len(monsterList)):
