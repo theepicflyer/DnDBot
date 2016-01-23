@@ -1,23 +1,45 @@
 from telegram import *
 
-updater = Updater(token="146256100:AAF_w7XAU6fU8Zm7TXLA0RMzZE4qjeVzNd0")
+updater = Updater(token="129193826:AAHfEbo7HjUhk5T48PC6gEhPgsIEYP8iuNI")
 dispatcher = updater.dispatcher
 
-monsterlist = []
+monsterList = []
+monsterIndex = 0
 
 class Monster(object):
-    health = 30
     strength = 5
-    def __init__(self, monstername):
-        self.monstername = monstername
-    def Monstercheckhealth(self):
-        bot.sendMessage(chat_id=chat_id, text= self.monstername + "'s is" + self.health)
-    def
+    def __init__(self, name, health):
+        self.name = name
+        self.health = health
+        
     
+def monsterStats(bot, update):
+    findMonsterIndex(update.message.text[14:])
+    
+    print (monster)
+    print (monster.health)
 
-def createMonster(bot,update):
-    monstername = update.message.text[15:]
-    monsterlist.append(Monster(monstername))
-    bot.sendMessage(chat_id = update.message.chat_id, text = monsterlist[0].monstername + "has been created")
+def findMonsterIndex(name):
+    for i in range(len(monsterList)):
+        if name == monsterList[i].name:
+            return i
 
-def attackMonster(bot, update):
+def createMonster(bot, update):
+    global monsterIndex
+    monsterName = update.message.text[15:]
+    health = 5
+    monsterList.append(Monster(monsterName, health))
+    print (monsterList[monsterIndex].name)
+    bot.sendMessage(chat_id = update.message.chat_id, text = monsterList[monsterIndex].name + " has been created")
+    monsterIndex += 1
+
+def start(bot, update):
+    bot.sendMessage(chat_id=update.message.chat_id, text="Hello")
+    
+#def attackMonster(bot, update):
+
+dispatcher.addTelegramCommandHandler('createmonster', createMonster)
+dispatcher.addTelegramCommandHandler('monsterstats', monsterStats)
+dispatcher.addTelegramCommandHandler('start', start)
+#dispatcher.addTelegramCommandHandler('attackmonster', attackMonster)
+updater.start_polling()
