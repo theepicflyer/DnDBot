@@ -13,7 +13,7 @@ class Character(object):
     characterName = None
     race = None
     _class = None
-    health = 30
+    
     stats = {'strength': 0, 'dexterity': 0, 'wisdom': 0, "intelligence": 0, "constitution": 0, "charisma": 0}
     def __init__(self, playerName, characterName):
         self.playerName = playerName
