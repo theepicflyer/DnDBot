@@ -98,11 +98,8 @@ def incomingMessages(bot, update):
         attributes = False
 
 def printCharacterStats(bot, update):
-    print("hello")
     i = findCharacterIndex(update.message.from_user.first_name)
     text = str(characterList[i].characterName) + "\n Created by: " + str(characterList[i].playerName) + "\n Strength: " + str(characterList[i].stats['strength']) + "\n Dexterity: " + str(characterList[i].stats['dexterity']) + "\n Wisdom: " + str(characterList[i].stats['wisdom']) + "\n Intelligence: " + str(characterList[i].stats['intelligence']) + "\n Constitution: " + str(characterList[i].stats['constitution']) + "\n Charisma: " + str(characterList[i].stats['charisma'])
-    print("lol")
-    print(text)
     bot.sendMessage(chat_id = update.message.chat_id, text = text) 
 
 
