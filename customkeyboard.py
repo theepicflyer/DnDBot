@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="152501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho")
+updater = Updater(token="INSERT YOUR TOKEN HERE")
 dispatcher = updater.dispatcher
 
 def Custom(bot, update):
