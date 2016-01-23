@@ -14,7 +14,7 @@ def start(bot, update): #The below code happens when /start command is called
 #The update parameter contains the new messages since the previous time it was updated by any function
 def bye(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text="Bye :(")
-    print("bye called")
+    print("bye called") Helloooo It's Me I was Wonderin (Ryan)
 
 def echo(bot, update):
     bot.sendMessage(chat_id=update.message.chat_id, text="You just sent: "
