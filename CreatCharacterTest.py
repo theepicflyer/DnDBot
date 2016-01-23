@@ -1,6 +1,6 @@
-from telegram import Updater
+from telegram import *
 
-updater = Updater(token="129193826:AAHfEbo7HjUhk5T48PC6gEhPgsIEYP8iuNI")
+updater = Updater(token="")
 dispatcher = updater.dispatcher
 
 characterlist = []
@@ -26,7 +26,17 @@ def createCharacter(bot, update):
     characterlist.append(Character(playername, charactername))
     bot.sendMessage(chat_id = update.message.chat_id, text = "Character " + characterlist[playerIndex].charactername + " has been created by " + characterlist[playerIndex].playername)
     playerIndex += 1
-    
+    defineAttributes(bot, update)
+
+def defineAttributes(bot, update):
+    attributesKeyboard = [
+        ['Race'],
+        ['Class'],
+        ['Done!']
+    ]
+    replyAttributes = telegram.ReplyKeyboardMarkup(attributesKeyboard)
+    bot.sendMessage(chat_id = update.message.chat_id, text= "SDefine your character's attributes", reply_markup=replyAttributes)
+
 def findCharacterIndex(first_name):
     for i in characterlist:
         if characterlist[i].playername == first_name:
