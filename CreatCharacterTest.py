@@ -1,6 +1,6 @@
 from telegram import Updater
 
-updater = Updater(token="152501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho")
+updater = Updater(token="129193826:AAHfEbo7HjUhk5T48PC6gEhPgsIEYP8iuNI")
 dispatcher = updater.dispatcher
 
 characterlist = []
@@ -12,7 +12,7 @@ class Character(object):
     race = None
     _class = None
     stats = {}
-    def __init__(self, charactername, playername):
+    def __init__(self, playername, charactername):
         self.playername = playername
         self.charactername = charactername
 
@@ -20,13 +20,13 @@ def start(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Welcome to Dungeons and Dragons.")
 
 def createCharacter(bot, update):
-    playerIndex += 1
-    playername = update.message.from_user.first_name
+    global playerIndex
     charactername = update.message.text[17:]
-    print (charactername)
-    characterlist.append(Character(playername, charactername))  
-    #bot.sendMessage(chat_id = update.message.chat_id, text = "The character %s has been created!" % (charactername))
-
+    playername = update.message.from_user.first_name
+    characterlist.append(Character(playername, charactername))
+    bot.sendMessage(chat_id = update.message.chat_id, text = "Character " + characterlist[playerIndex].charactername + " has been created by " + characterlist[playerIndex].playername)
+    playerIndex += 1
+    
 def findCharacterIndex(first_name):
     for i in characterlist:
         if characterlist[i].playername == first_name:
