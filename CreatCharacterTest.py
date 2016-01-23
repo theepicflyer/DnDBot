@@ -22,7 +22,8 @@ def start(bot, update):
 def createCharacter(bot, update):
     playerIndex += 1
     playername = update.message.from_user.first_name
-    charactername = update.message.text
+    charactername = update.message.text[17:]
+    print (charactername)
     characterlist.append(Character(playername, charactername))  
     #bot.sendMessage(chat_id = update.message.chat_id, text = "The character %s has been created!" % (charactername))
 
@@ -33,8 +34,6 @@ def findCharacterIndex(first_name):
 
 def unknown(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
-
-    
 
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
