@@ -29,3 +29,4 @@ dispatcher.addTelegramCommandHandler('bye', bye)
 dispatcher.addTelegramMessageHandler(echo)
 dispatcher.addTelegramCommandHandler('return', message)
 updater.start_polling() #Keeps checking until stop_polling() is called lols
+#this is a comment
