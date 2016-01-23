@@ -1,6 +1,6 @@
 from telegram import Updater
 
-updater = Updater(token="129193826:AAHfEbo7HjUhk5T48PC6gEhPgsIEYP8iuNI")
+updater = Updater(token="REPLACE THIS TEXT WITH YOUR TOKEN")
 dispatcher = updater.dispatcher
 
 characterlist = []
