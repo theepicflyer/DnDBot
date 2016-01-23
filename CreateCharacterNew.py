@@ -1,3 +1,5 @@
+#remember checking for race and class
+
 from telegram import *
 
 updater = Updater(token="152501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho")
@@ -43,7 +45,7 @@ def IncomingMessages(bot, update):
         i = findCharacterIndex(update.message.from_user.first_name)
         characterList[i].race = attributesInput[0]
         characterList[i]._class = attributesInput[1]
-        bot.sendMessage(chat_id = update.message.chat_id, text = "Your character's race is " + characterList[i].race + " and your character's class is " + characterList[i]._class)
+        bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " " + characterList[i].characterName + "'s race and class is " + characterList[i].race + " and " + characterList[i]._class)
         attributes = False
 
 def findCharacterIndex(first_name):
