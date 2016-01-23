@@ -1,17 +1,16 @@
-from telegram import *
+from twx.botapi import TelegramBot, ReplyKeyboardMarkup
 
-updater = Updater(token="152501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho")
-dispatcher = updater.dispatcher
+bot = TelegramBot('52501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho')
+bot.update_bot_info().wait()
+print(bot.username)
 
-def Custom(bot, update):
-    custom_keyboard = [[ telegram.Emoji.THUMBS_UP_SIGN, telegram.Emoji.THUMBS_DOWN_SIGN ]]
-    reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard)
-    bot.sendMessage(chat_id=chat_id, text="Stay here, I'll be back.", reply_markup=reply_markup)
+keyboard = [
+            ['7', '8', '9'],
+            ['4', '5', '6'],
+            ['1', '2', '3'],
+            ['0']
+            ]
 
-def start(bot, update):
-    bot.sendMessage(chat_id = update.message.chat_id, text = "Custom keyboard!")
+reply_markup = ReplyKeyboardMarkup.create(keyboard)
 
-dispatcher.addTelegramCommandHandler('start', start)
-dispatcher.addTelegramCommandHandler('custom', Custom)
-
-updater.start_polling()
+bot.send_message(user_id, 'please enter a number', reply_markup=reply_markup).wait()
