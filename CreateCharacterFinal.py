@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="INSERT YOUR TOKEN HERE")
+updater = Updater(token="")
 dispatcher = updater.dispatcher
 
 characterList = []
@@ -67,8 +67,7 @@ class Character(object):
             self.stats['wisdom'] = self.stats['wisdom'] - 1
             self.stats['intelligence'] = self.stats['intelligence'] 
             self.stats['constitution'] = self.stats['constitution'] - 2
-            self.stats['charisma'] = self.stats['charisma'] + 2
-        print(str(self.stats))      
+            self.stats['charisma'] = self.stats['charisma'] + 2     
 
 def start(bot, update):
     #Displays "Welcome to Dungeons and Dragons.")
@@ -86,7 +85,6 @@ def createCharacter(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "@" + playerName + " Please enter your character's Race & Class in the format: [Race] [Class]")
     global attributes
     attributes = True
-    print(str(attributes))
 
 def incomingMessages(bot, update):
     global attributes
@@ -97,16 +95,30 @@ def incomingMessages(bot, update):
         characterList[i].race = attributesInput[0]
         characterList[i]._class = attributesInput[1]
         #Display "@[Player] [Character]'s race is [Race] and [Character]'s class is [Class]
-        bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " " + characterList[i].characterName + "'s race is " + characterList[i].race + " and " + characterList[i].characterName + "'s class is"+ characterList[i]._class) + "."
+        bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " " + characterList[i].characterName + "'s race is " + characterList[i].race + " and " + characterList[i].characterName + "'s class is "+ characterList[i]._class + ".")
         characterList[i].updateStats(characterList[i].race, characterList[i]._class)
-        printCharacterStats(bot, update)
+        statsheet = (str(characterList[i].characterName) + "\n Created by: "
+        + str(characterList[i].playerName)
+        + "\n Strength: " + str(characterList[i].stats['strength'])
+        + "\n Dexterity: " + str(characterList[i].stats['dexterity'])
+        + "\n Wisdom: " + str(characterList[i].stats['wisdom'])
+        + "\n Intelligence: " + str(characterList[i].stats['intelligence'])
+        + "\n Constitution: " + str(characterList[i].stats['constitution'])
+        + "\n Charisma: " + str(characterList[i].stats['charisma']))
+        print(statsheet)
+        bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
         attributes = False
 
 def printCharacterStats(bot, update):
-    print("hello")
-    i = findCharacterIndex(update.message.from_user.first_name)
+    # /printcharacterstats CHARACTER_NAME
+    input = update.message.text
+    input = input.split()
+    name = input[1]
+    for i in range(len(characterList)):
+        if characterList[i].characterName == name:
+            pass
     statsheet = str(characterList[i].characterName) + "\n Created by: " + str(characterList[i].playerName) + "\n Strength: " + str(characterList[i].stats['strength']) + "\n Dexterity: " + str(characterList[i].stats['dexterity']) + "\n Wisdom: " + str(characterList[i].stats['wisdom']) + "\n Intelligence: " + str(characterList[i].stats['intelligence']) + "\n Constitution: " + str(characterList[i].stats['constitution']) + "\n Charisma: " + str(characterList[i].stats['charisma'])
-    bot.sendMessage(chat_id = update.message.chat_id, text = text) 
+    bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
 
 def findCharacterIndex(first_name):
     for i in range(len(characterList)):
@@ -116,7 +128,7 @@ def findCharacterIndex(first_name):
 def unknown(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
 
-dispatcher.addTelegramMessageHandler(IncomingMessages)
+dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
