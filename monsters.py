@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="TOKEN")
+updater = Updater(token="INSERT TOKEN HERE")
 dispatcher = updater.dispatcher
 
 monsterList = [] #list storing all monsters
@@ -23,7 +23,7 @@ def createMonster(bot, update):
     monsterName = input[1]
     health = int(input[2])
     monsterList.append(Monster(monsterName, health)) #add to list
-    bot.sendMessage(chat_id = update.message.chat_id, text = monsterList[monsterIndex].name + " has been created with %d health" % (monsterList[monsterIndex].health)
+    bot.sendMessage(chat_id = update.message.chat_id, text = monsterList[monsterIndex].name + " has been created with %d health" % (monsterList[monsterIndex].health))
     monsterIndex += 1
 
 def start(bot, update):
