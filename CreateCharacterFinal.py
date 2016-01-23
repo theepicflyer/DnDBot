@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="")
+updater = Updater(token="135975691:AAGTcqMOEmgx1pV-laaIRNfkNg8qib00yN8")
 dispatcher = updater.dispatcher
 
 characterList = []
@@ -13,8 +13,7 @@ class Character(object):
     characterName = None
     race = None
     _class = None
-    
-    stats = {'strength': 0, 'dexterity': 0, 'wisdom': 0, "intelligence": 0, "constitution": 0, "charisma": 0}
+    stats = {'strength': 0, 'dexterity': 0, 'wisdom': 0, "intelligence": 0, "constitution": 0, "charisma": 0, "health": 0}
     def __init__(self, playerName, characterName):
         self.playerName = playerName
         self.characterName = characterName
@@ -28,6 +27,8 @@ class Character(object):
             self.stats['intelligence'] = 5
             self.stats['constitution'] = 5
             self.stats['charisma'] = 5
+            if self.stats ['constitution'] == 5:
+                self.stats['health']= 18
         #Race Stats for Dwarf
         elif self.race == 'dwarf':
             self.stats['strength'] = 6
@@ -36,6 +37,8 @@ class Character(object):
             self.stats['intelligence'] = 3
             self.stats['constitution'] = 7
             self.stats['charisma'] = 3
+            if self.stats ['constitution'] == 7:
+                self.stats['health']= 20
         #Race Stats for Elf
         elif self.race == 'elf':
             self.stats['strength'] = 3
@@ -44,31 +47,83 @@ class Character(object):
             self.stats['intelligence'] = 7
             self.stats['constitution'] = 3
             self.stats['charisma'] = 6
+            if self.stats ['constitution'] ==3:
+                self.stats['health']= 16
+        #Race Stats for Ogre
+        elif self.race == 'ogre':
+            self.stats['strength'] = 10
+            self.stats['dexterity'] = 3
+            self.stats['wisdom'] = 3
+            self.stats['intelligence'] = 3
+            self.stats['constitution'] = 8
+            self.stats['charisma'] = 3
+            if self.stats ['constitution'] ==8:
+                self.stats['health']= 21
+        #Race Stats for Merman
+        elif self.race == 'merman':
+            self.stats['strength'] = 7
+            self.stats['dexterity'] = 5
+            self.stats['wisdom'] = 6
+            self.stats['intelligence'] = 5
+            self.stats['constitution'] = 4
+            self.stats['charisma'] = 3
+            if self.stats ['constitution'] ==4:
+                self.stats['health']= 17
         #Class Stats for Fighter
         if self._class == 'fighter':
-            self.stats['strength'] = self.stats['strength'] + 4
+            self.stats['strength'] = self.stats['strength'] + 2
             self.stats['dexterity'] = self.stats['dexterity'] 
             self.stats['wisdom'] = self.stats['wisdom'] - 1
             self.stats['intelligence'] = self.stats['intelligence'] - 2
-            self.stats['constitution'] = self.stats['constitution']
+            self.stats['constitution'] = self.stats['constitution'] + 2
             self.stats['charisma'] = self.stats['charisma'] - 1
+            self.stats['gold'] = 50
         #Class Stats for Mage
         elif self._class == 'mage':
             self.stats['strength'] = self.stats['strength'] - 2
-            self.stats['dexterity'] = self.stats['dexterity'] + 1
-            self.stats['wisdom'] = self.stats['wisdom'] + 1
+            self.stats['dexterity'] = self.stats['dexterity'] 
+            self.stats['wisdom'] = self.stats['wisdom'] + 2
             self.stats['intelligence'] = self.stats['intelligence'] + 2
-            self.stats['constitution'] = self.stats['constitution'] - 2
-            self.stats['charisma'] = self.stats['charisma']
+            self.stats['constitution'] = self.stats['constitution'] - 1
+            self.stats['charisma'] = self.stats['charisma'] - 1
+            self.stats['gold'] = 100
+        #Class Stats for Priest
+        elif self._class == 'priest':
+            self.stats['strength'] = self.stats['strength'] - 2
+            self.stats['dexterity'] = self.stats['dexterity'] 
+            self.stats['wisdom'] = self.stats['wisdom'] + 3
+            self.stats['intelligence'] = self.stats['intelligence'] + 1
+            self.stats['constitution'] = self.stats['constitution'] - 1
+            self.stats['charisma'] = self.stats['charisma'] - 1
+            self.stats['gold'] = 250
         #Class Stats for Thief
         elif self._class == 'thief':
             self.stats['strength'] = self.stats['strength'] - 1
             self.stats['dexterity'] = self.stats['dexterity'] + 2
-            self.stats['wisdom'] = self.stats['wisdom'] - 1
+            self.stats['wisdom'] = self.stats['wisdom'] -2
             self.stats['intelligence'] = self.stats['intelligence'] 
-            self.stats['constitution'] = self.stats['constitution'] - 2
-            self.stats['charisma'] = self.stats['charisma'] + 2     
-
+            self.stats['constitution'] = self.stats['constitution'] -1
+            self.stats['charisma'] = self.stats['charisma'] + 2
+            self.stats['gold'] = 200
+        #Class Stats for Ranger
+        elif self._class == 'ranger':
+            self.stats['strength'] = self.stats['strength'] - 1
+            self.stats['dexterity'] = self.stats['dexterity'] + 3
+            self.stats['wisdom'] = self.stats['wisdom'] -1
+            self.stats['intelligence'] = self.stats['intelligence'] 
+            self.stats['constitution'] = self.stats['constitution'] -2
+            self.stats['charisma'] = self.stats['charisma'] + 1
+            self.stats['gold'] = 200
+            
+            def changehealth(bot, update, self):
+                bot.sendMessage(chat_id = update.message.chat_id, text = "Add or Subtract Health by Keying it [Subtract/Add] [Number]")
+                number = int (update.message.text[2:])
+                pos = (update.message.text[1:])
+                if (pos[1:] == "S"
+                    self.stats['health'] = self.stats['health'] - number
+                elif (pos[1:]) == "A"
+                    self.stats['health'] = self.stats['health'] + number
+              
 def start(bot, update):
     #Displays "Welcome to Dungeons and Dragons.")
     bot.sendMessage(chat_id = update.message.chat_id, text = "Welcome to Dungeons and Dragons.")
@@ -104,20 +159,21 @@ def incomingMessages(bot, update):
         + "\n Wisdom: " + str(characterList[i].stats['wisdom'])
         + "\n Intelligence: " + str(characterList[i].stats['intelligence'])
         + "\n Constitution: " + str(characterList[i].stats['constitution'])
-        + "\n Charisma: " + str(characterList[i].stats['charisma']))
+        + "\n Charisma: " + str(characterList[i].stats['charisma'])
+        + "\n Health: " + str(characterList[i].stats['health']))
         print(statsheet)
         bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
         attributes = False
 
 def printCharacterStats(bot, update):
     # /printcharacterstats CHARACTER_NAME
-    input = update.message.text
-    input = input.split()
-    name = input[1]
+    _input = update.message.text
+    _input = _input.split()
+    name = _input[1]
     for i in range(len(characterList)):
         if characterList[i].characterName == name:
             pass
-    statsheet = str(characterList[i].characterName) + "\n Created by: " + str(characterList[i].playerName) + "\n Strength: " + str(characterList[i].stats['strength']) + "\n Dexterity: " + str(characterList[i].stats['dexterity']) + "\n Wisdom: " + str(characterList[i].stats['wisdom']) + "\n Intelligence: " + str(characterList[i].stats['intelligence']) + "\n Constitution: " + str(characterList[i].stats['constitution']) + "\n Charisma: " + str(characterList[i].stats['charisma'])
+    statsheet = str(characterList[i].characterName) + "\n Created by: " + str(characterList[i].playerName) + "\n Strength: " + str(characterList[i].stats['strength']) + "\n Dexterity: " + str(characterList[i].stats['dexterity']) + "\n Wisdom: " + str(characterList[i].stats['wisdom']) + "\n Intelligence: " + str(characterList[i].stats['intelligence']) + "\n Constitution: " + str(characterList[i].stats['constitution']) + "\n Charisma: " + str(characterList[i].stats['charisma']) + "\n Health: " + str(CharacterList[i].stats['health'])
     bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
 
 def findCharacterIndex(first_name):
@@ -128,7 +184,9 @@ def findCharacterIndex(first_name):
 def unknown(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
 
+
 dispatcher.addTelegramMessageHandler(incomingMessages)
+dispatcher.addTelegramCommandHandler('changehealth', changehealth)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
