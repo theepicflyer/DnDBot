@@ -1,6 +1,6 @@
 #Demonstrating some basic stuff with the API
 from telegram import Updater
-updater = Updater(token='129193826:AAHfEbo7HjUhk5T48PC6gEhPgsIEYP8iuNI')
+updater = Updater(token='135975691:AAGTcqMOEmgx1pV-laaIRNfkNg8qib00yN8')
 dispatcher = updater.dispatcher
 
 #The chat id here is auto generated for every conversation the bot has with a user
