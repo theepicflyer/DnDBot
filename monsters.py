@@ -23,7 +23,7 @@ def createMonster(bot, update):
     monsterName = input[1]
     health = int(input[2])
     monsterList.append(Monster(monsterName, health)) #add to list
-    bot.sendMessage(chat_id = update.message.chat_id, text = monsterList[monsterIndex].name + " has been created")
+    bot.sendMessage(chat_id = update.message.chat_id, text = monsterList[monsterIndex].name + " has been created with %d health" % (monsterList[monsterIndex].health)
     monsterIndex += 1
 
 def start(bot, update):
