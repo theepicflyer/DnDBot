@@ -2,7 +2,7 @@
 
 from telegram import *
 
-updater = Updater(token="152501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho")
+updater = Updater(token="INSERT YOUR TOKEN HERE")
 dispatcher = updater.dispatcher
 
 characterList = []
@@ -35,7 +35,7 @@ def createCharacter(bot, update):
     global attributes
     attributes = True
 
-def IncomingMessages(bot, update):
+def incomingMessages(bot, update):
     global attributes
     if attributes == True:
         print ("lols")
@@ -58,7 +58,7 @@ def unknown(bot, update):
 
 dispatcher.addTelegramMessageHandler(IncomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
-dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
+dispatcher.addTelegramCommandHandler('createCharacter', createCharacter)
 dispatcher.addUnknownTelegramCommandHandler(unknown)                
 
 updater.start_polling()
