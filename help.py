@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="")
+updater = Updater(token="135975691:AAGTcqMOEmgx1pV-laaIRNfkNg8qib00yN8")
 dispatcher = updater.dispatcher
 
 def Help(bot, update):
@@ -18,8 +18,8 @@ def Help(bot, update):
     "\n /changexp [character name] +/- X - Adds or subtracts a certain amount of health from a character." +
     "\n /changegold [character name] +/- X - Adds or subtracts a certain amount of gold from a character." +
     "\n /changehealth [character name] +/- X - Adds or subtacts a certain amount of health from a character."
-    "\n /inventoryUpdate [character name] add/remove [item] [no. of item] - Adds or removes a certain amount of a specific item from a character's inventory."
-    "\n /inventoryUpdate - Current state of the inventory."
+    "\n /inventoryupdate [character name] add/remove [item] [no. of item] - Adds or removes a certain amount of a specific item from a character's inventory."
+    "\n /printinventory - Current state of the inventory.")
                     
 
 dispatcher.addTelegramCommandHandler('help', Help)
