@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="135975691:AAGTcqMOEmgx1pV-laaIRNfkNg8qib00yN8")
+updater = Updater(token="")
 dispatcher = updater.dispatcher
 
 characterList = []
@@ -114,15 +114,6 @@ class Character(object):
             self.stats['constitution'] = self.stats['constitution'] -2
             self.stats['charisma'] = self.stats['charisma'] + 1
             self.stats['gold'] = 200
-            
-            def changehealth(bot, update, self):
-                bot.sendMessage(chat_id = update.message.chat_id, text = "Add or Subtract Health by Keying it [Subtract/Add] [Number]")
-                number = int (update.message.text[2:])
-                pos = (update.message.text[1:])
-                if (pos[1:] == "S"
-                    self.stats['health'] = self.stats['health'] - number
-                elif (pos[1:]) == "A"
-                    self.stats['health'] = self.stats['health'] + number
               
 def start(bot, update):
     #Displays "Welcome to Dungeons and Dragons.")
@@ -130,6 +121,9 @@ def start(bot, update):
 
 def createCharacter(bot, update):
     global playerIndex
+    if findCharacterIndex(update.message.from_user.first_name) != -1:
+        bot.sendMessage(chat_id = update.message.chat_id, text = "@" + update.message.from_user.first_name + " already has a character")
+        return None
     characterName = update.message.text[17:]
     playerName = update.message.from_user.first_name
     characterList.append(Character(playerName, characterName))
@@ -161,7 +155,6 @@ def incomingMessages(bot, update):
         + "\n Constitution: " + str(characterList[i].stats['constitution'])
         + "\n Charisma: " + str(characterList[i].stats['charisma'])
         + "\n Health: " + str(characterList[i].stats['health']))
-        print(statsheet)
         bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
         attributes = False
 
@@ -180,13 +173,12 @@ def findCharacterIndex(first_name):
     for i in range(len(characterList)):
         if characterList[i].playerName == first_name:
             return i
+    return -1
 
 def unknown(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
 
-
 dispatcher.addTelegramMessageHandler(incomingMessages)
-dispatcher.addTelegramCommandHandler('changehealth', changehealth)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
