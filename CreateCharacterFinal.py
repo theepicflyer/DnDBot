@@ -73,18 +73,18 @@ class Character(object):
         #Class Stats for Fighter
         if self._class == 'fighter':
             self.stats['strength'] = self.stats['strength'] + 2
-            self.stats['dexterity'] = self.stats['dexterity'] 
+            self.stats['dexterity'] = self.stats['dexterity']
             self.stats['wisdom'] = self.stats['wisdom'] - 1
             self.stats['intelligence'] = self.stats['intelligence'] - 2
             self.stats['constitution'] = self.stats['constitution'] + 2
             self.stats['charisma'] = self.stats['charisma'] - 1
             self.stats['gold'] = 50
             self.stats['experience'] = 0
-    
+
         #Class Stats for Mage
         elif self._class == 'mage':
             self.stats['strength'] = self.stats['strength'] - 2
-            self.stats['dexterity'] = self.stats['dexterity'] 
+            self.stats['dexterity'] = self.stats['dexterity']
             self.stats['wisdom'] = self.stats['wisdom'] + 2
             self.stats['intelligence'] = self.stats['intelligence'] + 2
             self.stats['constitution'] = self.stats['constitution'] - 1
@@ -93,19 +93,19 @@ class Character(object):
         #Class Stats for Priest
         elif self._class == 'priest':
             self.stats['strength'] = self.stats['strength'] - 2
-            self.stats['dexterity'] = self.stats['dexterity'] 
+            self.stats['dexterity'] = self.stats['dexterity']
             self.stats['wisdom'] = self.stats['wisdom'] + 3
             self.stats['intelligence'] = self.stats['intelligence'] + 1
             self.stats['constitution'] = self.stats['constitution'] - 1
             self.stats['charisma'] = self.stats['charisma'] - 1
             self.stats['gold'] = 250
-            self.stats['experience'] = 0 
+            self.stats['experience'] = 0
         #Class Stats for Thief
         elif self._class == 'thief':
             self.stats['strength'] = self.stats['strength'] - 1
             self.stats['dexterity'] = self.stats['dexterity'] + 2
             self.stats['wisdom'] = self.stats['wisdom'] -2
-            self.stats['intelligence'] = self.stats['intelligence'] 
+            self.stats['intelligence'] = self.stats['intelligence']
             self.stats['constitution'] = self.stats['constitution'] -1
             self.stats['charisma'] = self.stats['charisma'] + 2
             self.stats['gold'] = 200
@@ -115,12 +115,12 @@ class Character(object):
             self.stats['strength'] = self.stats['strength'] - 1
             self.stats['dexterity'] = self.stats['dexterity'] + 3
             self.stats['wisdom'] = self.stats['wisdom'] -1
-            self.stats['intelligence'] = self.stats['intelligence'] 
+            self.stats['intelligence'] = self.stats['intelligence']
             self.stats['constitution'] = self.stats['constitution'] -2
             self.stats['charisma'] = self.stats['charisma'] + 1
             self.stats['gold'] = 200
             self.stats['experience'] = 0
-              
+
 def start(bot, update):
     #Displays "Welcome to Dungeons and Dragons.")
     bot.sendMessage(chat_id = update.message.chat_id, text = "Welcome to Dungeons and Dragons.")
@@ -166,7 +166,7 @@ def incomingMessages(bot, update):
         + "\n Gold: " + str(characterList[i].stats['gold'])
         + "\n Experience: " + str(characterList[i].stats['experience']))
         print(statsheet)
-        bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
+        bot.sendMessage(chat_id = update.message.chat_id, text = statsheet)
         attributes = False
 
 def printCharacterStats(bot, update):
@@ -201,9 +201,19 @@ def findCharacterIndex(first_name):
             return i
     return -1
 
+def parseInput(input, no):
+    input = input.split()
+    name = input[1]
+    if len(input()) > no:
+        a = len(input()) - no
+        for i in range(2, a + 1):
+            name += input[i]
+    print(name)
+
+
 def unknown(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
-    
+
 def alterHealth(bot, update):
     #/changehealth charactername state value
     userInput = update.message.text
@@ -250,7 +260,7 @@ def inventoryUpdate(bot, update):
     for item in items:
         text += item[0] + ": " + str(item[1]) + "\n"
     bot.sendMessage(chat_id = update.message.chat_id, text = text)
-    
+
 def alterGold(bot, update):
     #/changehealth characternamevalue
     userInput = update.message.text
@@ -263,7 +273,7 @@ def alterGold(bot, update):
             break
     value = int(userInput[2])
     characterList[i].stats['gold'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed " + userInput[2] + " to " + str(characterList[i].stats['gold']))    
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed " + userInput[2] + " to " + str(characterList[i].stats['gold']))
 
 def alterExperience(bot, update):
     #/changeXP characterName value
@@ -277,8 +287,8 @@ def alterExperience(bot, update):
             break
     value = int(userInput[2])
     characterList[i].stats['experience'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience'])) 
-    
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience']))
+
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('changehealth', alterHealth)
