@@ -5,6 +5,7 @@ dispatcher = updater.dispatcher
 
 characterList = []
 playerIndex = 0
+DM = None
 
 attributes = False
 
@@ -125,6 +126,14 @@ def start(bot, update):
     #Displays "Welcome to Dungeons and Dragons.")
     bot.sendMessage(chat_id = update.message.chat_id, text = "Welcome to Dungeons and Dragons.")
 
+def setDM(bot, update):
+    global DM
+    if DM == None:
+        DM = update.message.from_user.first_name
+        bot.sendMessage(chat_id = update.message.chat_id, text = DM + " has been set as Dungeon Master")
+    else:
+        bot.sendMessage(char_id = update.message.chat_id, text = "DM " + DM + " has already been set!")
+
 def createCharacter(bot, update):
     global playerIndex
     if findCharacterIndex(update.message.from_user.first_name) != -1:
@@ -216,19 +225,55 @@ def unknown(bot, update):
 
 def alterHealth(bot, update):
     #/changehealth charactername state value
-    userInput = update.message.text
-    userInput= userInput.split()
-    characterName = userInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == characterName:
-            i=index
-            break
-    value = int(userInput[2])
-    characterList[i].stats['health'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
+    user = update.message.from_user.first_name
+    if user != DM:
+        bot.sendMessage(chat_id = update.message.chat_id, text = "You're not authorised to use this command!")
+    else:
+        userInput = update.message.text
+        userInput= userInput.split()
+        characterName = userInput[1]
+        value = int(userInput[2])
+        i = findCharacterIndex(update.message.from_user.first_name)
+        characterList[i].stats['health'] += value
+        bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed by " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
 def inventoryUpdate(bot, update):
+    user = update.message.from_user.first_name
+    if user != DM:
+        bot.sendMessage(chat_id = update.message.chat_id, text = "You're not authorised to use this command!")
+    else:
+        inventoryInput = update.message.text
+        inventoryInput = inventoryInput.split()
+        name = inventoryInput[1]
+        i = 0
+        for index in range(len(characterList)):
+            if characterList[index].characterName == name:
+                i=index
+                break
+        print (name + characterList[i].playerName)
+        if inventoryInput[2] == "remove":
+            if inventoryInput[3] not in characterList[i].inventory:
+                bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have %s in your inventory!" % (inventoryInput[3]))
+            elif inventoryInput[3] in characterList[i].inventory:
+                if int(inventoryInput[4]) > characterList[i].inventory[inventoryInput[3]]:
+                    bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have enough " + inventoryInput[3] + "!")
+                elif int(inventoryInput[4]) == characterList[i].inventory[inventoryInput[3]]:
+                    del characterList[i].inventory[inventoryInput[3]]
+                elif int(inventoryInput[4]) < characterList[i].inventory[inventoryInput[3]]:
+                    characterList[i].inventory[inventoryInput[3]] = characterList[i].inventory[inventoryInput[3]] - int(inventoryInput[4])
+        elif inventoryInput[2] == "add":
+            if inventoryInput[3] not in characterList[i].inventory:
+                characterList[i].inventory[inventoryInput[3]] = int(inventoryInput[4])
+            elif inventoryInput[3] in characterList[i].inventory:
+                characterList[i].inventory[inventoryInput[3]] = characterList[i].inventory[inventoryInput[3]] + int(inventoryInput[4])
+        print (characterList[i].inventory)
+        items = characterList[i].inventory.items()
+        text = characterList[i].characterName + "'s Inventory \n"
+        for item in items:
+            text += item[0] + ": " + str(item[1]) + "\n"
+        bot.sendMessage(chat_id = update.message.chat_id, text = text)
+
+def printInventory(bot, update):
     inventoryInput = update.message.text
     inventoryInput = inventoryInput.split()
     name = inventoryInput[1]
@@ -237,64 +282,50 @@ def inventoryUpdate(bot, update):
         if characterList[index].characterName == name:
             i=index
             break
-    print (name + characterList[i].playerName)
-    if inventoryInput[2] == "remove":
-        if inventoryInput[3] not in characterList[i].inventory:
-            bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have %s in your inventory!" % (inventoryInput[3]))
-        elif inventoryInput[3] in characterList[i].inventory:
-            if int(inventoryInput[4]) > characterList[i].inventory[inventoryInput[3]]:
-                bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have enough " + inventoryInput[3] + "!")
-            elif int(inventoryInput[4]) == characterList[i].inventory[inventoryInput[3]]:
-                del characterList[i].inventory[inventoryInput[3]]
-            elif int(inventoryInput[4]) < characterList[i].inventory[inventoryInput[3]]:
-                characterList[i].inventory[inventoryInput[3]] = characterList[i].inventory[inventoryInput[3]] - int(inventoryInput[4])
-    elif inventoryInput[2] == "add":
-        if inventoryInput[3] not in characterList[i].inventory:
-            characterList[i].inventory[inventoryInput[3]] = int(inventoryInput[4])
-        elif inventoryInput[3] in characterList[i].inventory:
-            characterList[i].inventory[inventoryInput[3]] = characterList[i].inventory[inventoryInput[3]] + int(inventoryInput[4])
-    print (characterList[i].inventory)
-    bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " " + characterList[i].characterName + "\'s Inventory:")
     items = characterList[i].inventory.items()
-    text = ""
+    text = characterList[i].characterName + "'s Inventory \n"
     for item in items:
         text += item[0] + ": " + str(item[1]) + "\n"
     bot.sendMessage(chat_id = update.message.chat_id, text = text)
+    
+    
 
 def alterGold(bot, update):
     #/changehealth characternamevalue
-    userInput = update.message.text
-    userInput= userInput.split()
-    characterName = userInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == characterName:
-            i=index
-            break
-    value = int(userInput[2])
-    characterList[i].stats['gold'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed " + userInput[2] + " to " + str(characterList[i].stats['gold']))
+    user = update.message.from_user.first_name
+    if user != DM:
+        bot.sendMessage(chat_id = update.message.chat_id, text = "You're not authorised to use this command!")
+    else:
+        userInput = update.message.text
+        userInput= userInput.split()
+        characterName = userInput[1]
+        value = int(userInput[2])
+        i = findCharacterIndex(update.message.from_user.first_name)
+        characterList[i].stats['gold'] += value
+        bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed by" + userInput[2] + " to " + str(characterList[i].stats['gold']))
 
 def alterExperience(bot, update):
     #/changeXP characterName value
-    userInput = update.message.text
-    userInput= userInput.split()
-    characterName = userInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == characterName:
-            i=index
-            break
-    value = int(userInput[2])
-    characterList[i].stats['experience'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience']))
+    user = update.message.from_user.first_name
+    if user != DM:
+        bot.sendMessage(chat_id = update.message.chat_id, text = "You're not authorised to use this command!")
+    else:
+        userInput = update.message.text
+        userInput= userInput.split()
+        characterName = userInput[1]
+        value = int(userInput[2])
+        i = findCharacterIndex(update.message.from_user.first_name)
+        characterList[i].stats['experience'] += value
+        bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed by" + userInput[2] + " to " + str(characterList[i].stats['experience'])) 
 
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
+dispatcher.addTelegramCommandHandler('setdm', setDM)
 dispatcher.addTelegramCommandHandler('changehealth', alterHealth)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
 dispatcher.addTelegramCommandHandler('inventoryupdate', inventoryUpdate)
+dispatcher.addTelegramCommandHandler('printinventory', printInventory)
 dispatcher.addTelegramCommandHandler('changegold',alterGold)
 dispatcher.addTelegramCommandHandler('changeXP',alterExperience)
 dispatcher.addUnknownTelegramCommandHandler(unknown)
