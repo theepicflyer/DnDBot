@@ -1,12 +1,12 @@
 # DnDBot
 This is a Telegram bot for playing Dungeons and Dragons
 
-##Installation
+## Installation
 Download `main.py`, `monsters.py`, `dice.py`, `help.py` files from `main` folder
 The bot uses the [Python Telegram Bot](https://github.com/python-telegram-bot/python-telegram-bot)
 Install it with `pip install python-telegram-bot`
 
-##Setup
+## Setup
 1. `main.py`, `monsters.py`, `dice.py`, `help.py` in the `main` folder are all required to be run individually to work
 2. Get your own bot and token from [Telegram](https://core.telegram.org/bots)
 3. Replace `TOKEN` in all 4 files with your own token
@@ -15,7 +15,7 @@ Install it with `pip install python-telegram-bot`
 
 
 
-##Player Commands:
+## Player Commands:
 Command | Action
 --- | --- 
 /start | starts the DnD bot
@@ -24,7 +24,7 @@ Command | Action
 /help | Open this help message
 /roll[int] | Rolls a dice with the customisable maximum value
 
-##Dungeon Master Commands:
+## Dungeon Master Commands:
 Command | Action
 --- | --- 
 /createmonster [monster name] [health points] | Creates a monster.
