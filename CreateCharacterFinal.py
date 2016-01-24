@@ -17,7 +17,7 @@ class Character(object):
     stats = {'strength': 0, 'dexterity': 0, 'wisdom': 0, "intelligence": 0, "constitution": 0, "charisma": 0, "health": 0}
     def __init__(self, playerName, characterName):
         self.playerName = playerName
-        self.characterName = characterName
+        self.characterName = characterName.lower()
 
     def updateStats(self, race, _class):
         #Race Stats for Human
@@ -144,7 +144,7 @@ def createCharacter(bot, update):
 def incomingMessages(bot, update):
     global attributes
     if attributes == True:
-        attributesInput = update.message.text
+        attributesInput = update.message.text.lower()
         attributesInput = attributesInput.split()
         i = findCharacterIndex(update.message.from_user.first_name)
         characterList[i].race = attributesInput[0]
@@ -171,13 +171,8 @@ def incomingMessages(bot, update):
 
 def printCharacterStats(bot, update):
     # /printcharacterstats CHARACTER_NAME
-    _input = update.message.text
-    _input = _input.split()
-    name = _input[1]
-    for index in range(len(characterList)):
-        if characterList[index].characterName == name:
-            i=index
-            break
+    userInput = parseInput(update.message.text, 2)
+    i = getIndexFromCharacter(userInput[1])
     statsheet = (str(characterList[i].characterName) + "\n Created by: "
         + str(characterList[i].playerName)
         + "\n ----------------------------"
@@ -201,43 +196,17 @@ def findCharacterIndex(first_name):
             return i
     return -1
 
-def parseInput(input, no):
-    input = input.split()
-    name = input[1]
-    if len(input()) > no:
-        a = len(input()) - no
-        for i in range(2, a + 1):
-            name += input[i]
-    print(name)
-
-
-def unknown(bot, update):
-    bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
-
 def alterHealth(bot, update):
-    #/changehealth charactername state value
-    userInput = update.message.text
-    userInput= userInput.split()
-    characterName = userInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == characterName:
-            i=index
-            break
+    #/changehealth charactername value
+    userInput = parseInput(update.message.text, 3)
+    i = getIndexFromCharacter(userInput[1])
     value = int(userInput[2])
     characterList[i].stats['health'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
 def inventoryUpdate(bot, update):
-    inventoryInput = update.message.text
-    inventoryInput = inventoryInput.split()
-    name = inventoryInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == name:
-            i=index
-            break
-    print (name + characterList[i].playerName)
+    inventoryInput = parseInput(update.message.text, 5)
+    i = getIndexFromCharacter(inventoryInput[1])
     if inventoryInput[2] == "remove":
         if inventoryInput[3] not in characterList[i].inventory:
             bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have %s in your inventory!" % (inventoryInput[3]))
@@ -262,32 +231,38 @@ def inventoryUpdate(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = text)
 
 def alterGold(bot, update):
-    #/changehealth characternamevalue
-    userInput = update.message.text
-    userInput= userInput.split()
-    characterName = userInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == characterName:
-            i=index
-            break
+    #/changehealth charactername value
+    userInput = parseInput(update.message.text, 3)
+    i = getIndexFromCharacter(userInput[1])
     value = int(userInput[2])
     characterList[i].stats['gold'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed " + userInput[2] + " to " + str(characterList[i].stats['gold']))
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed by " + userInput[2] + " to " + str(characterList[i].stats['gold']))
 
 def alterExperience(bot, update):
     #/changeXP characterName value
-    userInput = update.message.text
-    userInput= userInput.split()
-    characterName = userInput[1]
-    i = 0
-    for index in range(len(characterList)):
-        if characterList[index].characterName == characterName:
-            i=index
-            break
+    userInput = parseInput(update.message.text, 3)
+    i = getIndexFromCharacter(userInput[1])
     value = int(userInput[2])
     characterList[i].stats['experience'] += value
-    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience']))
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed by " + userInput[2] + " to " + str(characterList[i].stats['experience']))
+
+def parseInput(words, no):
+    words = words.split()
+    a = len(words) - no
+    oup = words[1]
+    for i in range(2, 2 + a):
+        oup += words[i]
+    outt = []
+    outt.append(words[0].lower())
+    outt.append(oup.lower())
+    for i in range(2, no):
+        outt.append(words[a + i].lower())
+    return outt
+
+def getIndexFromCharacter(name):
+    for i in range(len(characterList)):
+        if characterList[i].characterName == name:
+            return i
 
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
@@ -297,6 +272,5 @@ dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
 dispatcher.addTelegramCommandHandler('inventoryupdate', inventoryUpdate)
 dispatcher.addTelegramCommandHandler('changegold',alterGold)
 dispatcher.addTelegramCommandHandler('changeXP',alterExperience)
-dispatcher.addUnknownTelegramCommandHandler(unknown)
 
 updater.start_polling()
