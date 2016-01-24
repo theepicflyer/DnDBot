@@ -177,9 +177,20 @@ def findCharacterIndex(first_name):
 
 def unknown(bot, update):
     bot.sendMessage(chat_id = update.message.chat_id, text = "Sorry, I didn't understand that!")
+    
+def alterHealth(bot, update):
+    #/changehealth charactername state value
+    userInput = update.message.text
+    userInput= userInput.split()
+    characterName = userInput[1]
+    value = int(userInput[2])
+    i = findCharacterIndex(update.message.from_user.first_name)
+    characterList[i].stats['health'] += value
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
+dispatcher.addTelegramCommandHandler('changehealth', alterHealth)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
 dispatcher.addUnknownTelegramCommandHandler(unknown)
