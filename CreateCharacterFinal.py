@@ -78,6 +78,8 @@ class Character(object):
             self.stats['constitution'] = self.stats['constitution'] + 2
             self.stats['charisma'] = self.stats['charisma'] - 1
             self.stats['gold'] = 50
+            self.stats['experience'] = 0
+    
         #Class Stats for Mage
         elif self._class == 'mage':
             self.stats['strength'] = self.stats['strength'] - 2
@@ -96,6 +98,7 @@ class Character(object):
             self.stats['constitution'] = self.stats['constitution'] - 1
             self.stats['charisma'] = self.stats['charisma'] - 1
             self.stats['gold'] = 250
+            self.stats['experience'] = 0 
         #Class Stats for Thief
         elif self._class == 'thief':
             self.stats['strength'] = self.stats['strength'] - 1
@@ -105,6 +108,7 @@ class Character(object):
             self.stats['constitution'] = self.stats['constitution'] -1
             self.stats['charisma'] = self.stats['charisma'] + 2
             self.stats['gold'] = 200
+            self.stats['experience'] = 0
         #Class Stats for Ranger
         elif self._class == 'ranger':
             self.stats['strength'] = self.stats['strength'] - 1
@@ -114,6 +118,7 @@ class Character(object):
             self.stats['constitution'] = self.stats['constitution'] -2
             self.stats['charisma'] = self.stats['charisma'] + 1
             self.stats['gold'] = 200
+            self.stats['experience'] = 0
               
 def start(bot, update):
     #Displays "Welcome to Dungeons and Dragons.")
@@ -148,13 +153,18 @@ def incomingMessages(bot, update):
         characterList[i].updateStats(characterList[i].race, characterList[i]._class)
         statsheet = (str(characterList[i].characterName) + "\n Created by: "
         + str(characterList[i].playerName)
+        +"\n ----------------------------"
         + "\n Strength: " + str(characterList[i].stats['strength'])
         + "\n Dexterity: " + str(characterList[i].stats['dexterity'])
         + "\n Wisdom: " + str(characterList[i].stats['wisdom'])
         + "\n Intelligence: " + str(characterList[i].stats['intelligence'])
         + "\n Constitution: " + str(characterList[i].stats['constitution'])
         + "\n Charisma: " + str(characterList[i].stats['charisma'])
-        + "\n Health: " + str(characterList[i].stats['health']))
+        + "\n ----------------------------"
+        + "\n Health: " + str(characterList[i].stats['health'])
+        + "\n Gold: " + str(characterList[i].stats['gold'])
+        + "\n Experience: " + str(characterList[i].stats['experience']))
+        print(statsheet)
         bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
         attributes = False
 
@@ -166,8 +176,22 @@ def printCharacterStats(bot, update):
     for i in range(len(characterList)):
         if characterList[i].characterName == name:
             pass
-    statsheet = str(characterList[i].characterName) + "\n Created by: " + str(characterList[i].playerName) + "\n Strength: " + str(characterList[i].stats['strength']) + "\n Dexterity: " + str(characterList[i].stats['dexterity']) + "\n Wisdom: " + str(characterList[i].stats['wisdom']) + "\n Intelligence: " + str(characterList[i].stats['intelligence']) + "\n Constitution: " + str(characterList[i].stats['constitution']) + "\n Charisma: " + str(characterList[i].stats['charisma']) + "\n Health: " + str(CharacterList[i].stats['health'])
-    bot.sendMessage(chat_id = update.message.chat_id, text = statsheet) 
+    statsheet = (str(characterList[i].characterName) + "\n Created by: "
+        + str(characterList[i].playerName)
+        + "\n ----------------------------"
+        + "\n Strength: " + str(characterList[i].stats['strength'])
+        + "\n Dexterity: " + str(characterList[i].stats['dexterity'])
+        + "\n Wisdom: " + str(characterList[i].stats['wisdom'])
+        + "\n Intelligence: " + str(characterList[i].stats['intelligence'])
+        + "\n Constitution: " + str(characterList[i].stats['constitution'])
+        + "\n Charisma: " + str(characterList[i].stats['charisma'])
+        + "\n ----------------------------"
+        + "\n Health: " + str(characterList[i].stats['health'])
+        + "\n Gold: " + str(characterList[i].stats['gold'])
+        + "\n Experience: " + str(characterList[i].stats['experience']))
+    print(statsheet)
+    bot.sendMessage(chat_id = update.message.chat_id, text = statsheet)
+
 
 def findCharacterIndex(first_name):
     for i in range(len(characterList)):
@@ -188,11 +212,35 @@ def alterHealth(bot, update):
     characterList[i].stats['health'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
+def alterGold(bot, update):
+    #/changehealth characternamevalue
+    userInput = update.message.text
+    userInput= userInput.split()
+    characterName = userInput[1]
+    value = int(userInput[2])
+    i = findCharacterIndex(update.message.from_user.first_name)
+    characterList[i].stats['gold'] += value
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed " + userInput[2] + " to " + str(characterList[i].stats['gold']))    
+
+def alterExperience(bot, update):
+    #/changeXP characterName value
+    userInput = update.message.text
+    userInput= userInput.split()
+    characterName = userInput[1]
+    value = int(userInput[2])
+    i = findCharacterIndex(update.message.from_user.first_name)
+    characterList[i].stats['experience'] += value
+    bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience'])) 
+    
+
+
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('changehealth', alterHealth)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
+dispatcher.addTelegramCommandHandler('changegold',alterGold)
+dispatcher.addTelegramCommandHandler('changeXP',alterExperience)
 dispatcher.addUnknownTelegramCommandHandler(unknown)
 
 updater.start_polling()
