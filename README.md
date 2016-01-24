@@ -2,6 +2,7 @@
 This is a Telegram bot for playing Dungeons and Dragons
 
 ##Installation
+Download `main.py`, `monsters.py`, `dice.py`, `help.py` files from `main` folder
 The bot uses the [Python Telegram Bot](https://github.com/python-telegram-bot/python-telegram-bot)
 Install it with `pip install python-telegram-bot`
 
