@@ -174,9 +174,10 @@ def printCharacterStats(bot, update):
     _input = update.message.text
     _input = _input.split()
     name = _input[1]
-    for i in range(len(characterList)):
-        if characterList[i].characterName == name:
-            pass
+    for index in range(len(characterList)):
+        if characterList[index].characterName == name:
+            i=index
+            break
     statsheet = (str(characterList[i].characterName) + "\n Created by: "
         + str(characterList[i].playerName)
         + "\n ----------------------------"
@@ -213,7 +214,6 @@ def alterHealth(bot, update):
     characterList[i].stats['health'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
-<<<<<<< HEAD
 def inventoryUpdate(bot, update):
     inventoryInput = update.message.text
     inventoryInput = inventoryInput.split()
@@ -247,7 +247,6 @@ def inventoryUpdate(bot, update):
         text += item[0] + ": " + str(item[1]) + "\n"
     bot.sendMessage(chat_id = update.message.chat_id, text = text)
     
-=======
 def alterGold(bot, update):
     #/changehealth characternamevalue
     userInput = update.message.text
@@ -268,20 +267,14 @@ def alterExperience(bot, update):
     characterList[i].stats['experience'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience'])) 
     
-
-
->>>>>>> origin/master
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('changehealth', alterHealth)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
-<<<<<<< HEAD
 dispatcher.addTelegramCommandHandler('inventoryupdate', inventoryUpdate)
-=======
 dispatcher.addTelegramCommandHandler('changegold',alterGold)
 dispatcher.addTelegramCommandHandler('changeXP',alterExperience)
->>>>>>> origin/master
 dispatcher.addUnknownTelegramCommandHandler(unknown)
 
 updater.start_polling()
