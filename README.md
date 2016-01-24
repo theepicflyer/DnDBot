@@ -17,11 +17,11 @@ Install it with `pip install python-telegram-bot`
 ##Player Commands:
 Command | Action
 --- | --- 
-/start - starts the DnD bot
-/createcharacter [character name] - Use this command and follow the prompts to create a new character
-/printcharacterstats [character name] - Prints a character's stats, add the name of the chharacter after the command
-/help - Open this help message
-/roll[int] - Rolls a dice with the customisable maximum value
+/start | starts the DnD bot
+/createcharacter [character name] | Use this command and follow the prompts to create a new character
+/printcharacterstats [character name] | Prints a character's stats, add the name of the chharacter after the command
+/help | Open this help message
+/roll[int] | Rolls a dice with the customisable maximum value
 
 ##Dungeon Master Commands:
 Command | Action
