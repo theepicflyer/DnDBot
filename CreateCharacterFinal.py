@@ -209,8 +209,12 @@ def alterHealth(bot, update):
     userInput = update.message.text
     userInput= userInput.split()
     characterName = userInput[1]
+    i = 0
+    for index in range(len(characterList)):
+        if characterList[index].characterName == characterName:
+            i=index
+            break
     value = int(userInput[2])
-    i = findCharacterIndex(update.message.from_user.first_name)
     characterList[i].stats['health'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
@@ -252,8 +256,12 @@ def alterGold(bot, update):
     userInput = update.message.text
     userInput= userInput.split()
     characterName = userInput[1]
+    i = 0
+    for index in range(len(characterList)):
+        if characterList[index].characterName == characterName:
+            i=index
+            break
     value = int(userInput[2])
-    i = findCharacterIndex(update.message.from_user.first_name)
     characterList[i].stats['gold'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s gold has been changed " + userInput[2] + " to " + str(characterList[i].stats['gold']))    
 
@@ -262,8 +270,12 @@ def alterExperience(bot, update):
     userInput = update.message.text
     userInput= userInput.split()
     characterName = userInput[1]
+    i = 0
+    for index in range(len(characterList)):
+        if characterList[index].characterName == characterName:
+            i=index
+            break
     value = int(userInput[2])
-    i = findCharacterIndex(update.message.from_user.first_name)
     characterList[i].stats['experience'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s XP has been changed " + userInput[2] + " to " + str(characterList[i].stats['experience'])) 
     
