@@ -1,6 +1,6 @@
 from telegram import *
 
-updater = Updater(token="")
+updater = Updater(token="152501487:AAElGigfjuICcLgXT4U2qu74OQyxmjQQ8Ho")
 dispatcher = updater.dispatcher
 
 characterList = []
@@ -13,6 +13,7 @@ class Character(object):
     characterName = None
     race = None
     _class = None
+    inventory = {}
     stats = {'strength': 0, 'dexterity': 0, 'wisdom': 0, "intelligence": 0, "constitution": 0, "charisma": 0, "health": 0}
     def __init__(self, playerName, characterName):
         self.playerName = playerName
@@ -188,11 +189,45 @@ def alterHealth(bot, update):
     characterList[i].stats['health'] += value
     bot.sendMessage(chat_id = update.message.chat_id, text = characterList[i].characterName + "'s health has been changed " + userInput[2] + " to " + str(characterList[i].stats['health']))
 
+def inventoryUpdate(bot, update):
+    inventoryInput = update.message.text
+    inventoryInput = inventoryInput.split()
+    name = inventoryInput[1]
+    i = 0
+    for index in range(len(characterList)):
+        if characterList[index].characterName == name:
+            i=index
+            break
+    print (name + characterList[i].playerName)
+    if inventoryInput[2] == "remove":
+        if inventoryInput[3] not in characterList[i].inventory:
+            bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have %s in your inventory!" % (inventoryInput[3]))
+        elif inventoryInput[3] in characterList[i].inventory:
+            if int(inventoryInput[4]) > characterList[i].inventory[inventoryInput[3]]:
+                bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " You don't have enough " + inventoryInput[3] + "!")
+            elif int(inventoryInput[4]) == characterList[i].inventory[inventoryInput[3]]:
+                del characterList[i].inventory[inventoryInput[3]]
+            elif int(inventoryInput[4]) < characterList[i].inventory[inventoryInput[3]]:
+                characterList[i].inventory[inventoryInput[3]] = characterList[i].inventory[inventoryInput[3]] - int(inventoryInput[4])
+    elif inventoryInput[2] == "add":
+        if inventoryInput[3] not in characterList[i].inventory:
+            characterList[i].inventory[inventoryInput[3]] = int(inventoryInput[4])
+        elif inventoryInput[3] in characterList[i].inventory:
+            characterList[i].inventory[inventoryInput[3]] = characterList[i].inventory[inventoryInput[3]] + int(inventoryInput[4])
+    print (characterList[i].inventory)
+    bot.sendMessage(chat_id = update.message.chat_id, text = "@" + characterList[i].playerName + " " + characterList[i].characterName + "\'s Inventory:")
+    items = characterList[i].inventory.items()
+    text = ""
+    for item in items:
+        text += item[0] + ": " + str(item[1]) + "\n"
+    bot.sendMessage(chat_id = update.message.chat_id, text = text)
+    
 dispatcher.addTelegramMessageHandler(incomingMessages)
 dispatcher.addTelegramCommandHandler('start', start)
 dispatcher.addTelegramCommandHandler('changehealth', alterHealth)
 dispatcher.addTelegramCommandHandler('createcharacter', createCharacter)
 dispatcher.addTelegramCommandHandler('printcharacterstats', printCharacterStats)
+dispatcher.addTelegramCommandHandler('inventoryupdate', inventoryUpdate)
 dispatcher.addUnknownTelegramCommandHandler(unknown)
 
 updater.start_polling()
